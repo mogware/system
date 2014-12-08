@@ -233,12 +233,11 @@ public class Decoder {
         ArrayType items = obj.getItems();
         if (items == null)
             return;
-
         int size = items.size();
         if (size == 0)
             return;
-
         Collection target = (Collection)obj.getTarget();
+        target.clear();
         for (int i = 0; i < size; i++) {
             Object custom, elem = items.get(i);
             if (elem == null)
