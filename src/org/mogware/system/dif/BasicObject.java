@@ -32,37 +32,29 @@ public class BasicObject extends LinkedHashMap<String, Object>
 
     @Override
     public boolean isList() {
-        if (containsKey("$items") && !containsKey("$keys")) {
+        if (containsKey("$items") && !containsKey("$keys"))
             return (this.target instanceof Collection);
-        }
-        if (this.type == null) {
+        if (this.type == null)
             return false;
-        }
         try {
             Class c = Decoder.classForName(this.type);
-            if (Collection.class.isAssignableFrom(c)) {
+            if (Collection.class.isAssignableFrom(c))
                 return true;
-            }
-        } catch (IOException ex) {
-        }
+        } catch (IOException ex) { }
         return false;
     }
 
     @Override
     public boolean isMap() {
-        if (containsKey("$items") && containsKey("$keys")) {
+        if (containsKey("$items") && containsKey("$keys"))
             return (this.target instanceof Map);
-        }
-        if (this.type == null) {
+        if (this.type == null)
             return false;
-        }
         try {
             Class c = Decoder.classForName(this.type);
-            if (Map.class.isAssignableFrom(c)) {
+            if (Map.class.isAssignableFrom(c))
                 return true;
-            }
-        } catch (IOException ex) {
-        }
+        } catch (IOException ex) { }
         return false;
     }
 
@@ -73,16 +65,13 @@ public class BasicObject extends LinkedHashMap<String, Object>
 
     @Override
     public Object put(String key, Object value) {
-        if (key == null) {
+        if (key == null)
             return super.put(key, value);
-        }
-
         if ("$type".equals(key)) {
             String oldType = this.type;
             this.type = (String) value;
             return oldType;
         }
-
         return super.put(key, value);
     }
 
