@@ -1,11 +1,13 @@
 package org.mogware.system.ioc;
 
+import org.mogware.system.delegates.Func1;
+
 public class Registration {
     private Object instance;
-    private final Resolver<Object> resolve;
+    private final Func1<Container, Object> resolve;
     private boolean instancePerCall = false;
 
-    public Registration(Resolver<Object> resolve) {
+    public Registration(Func1<Container, Object> resolve) {
         this.resolve = resolve;
         this.instance = null;
     }
@@ -22,9 +24,9 @@ public class Registration {
 
     public Object resolve(Container container) {
         if (this.instancePerCall)
-            return this.resolve.apply(container);
+            return this.resolve.call(container);
         if (this.instance != null)
             return this.instance;
-        return this.instance = this.resolve.apply(container);
+        return this.instance = this.resolve.call(container);
     }
 }
