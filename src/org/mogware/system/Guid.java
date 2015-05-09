@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 
 public final class Guid implements Comparable<Guid> {
+    public static final Guid empty = new Guid(0,0);
+
     private final long mostSigBits;
     private final long leastSigBits;
 
@@ -87,7 +89,6 @@ public final class Guid implements Comparable<Guid> {
         SecureRandom ng = numberGenerator;
         if (ng == null)
             numberGenerator = ng = new SecureRandom();
-
         byte[] randomBytes = new byte[16];
         ng.nextBytes(randomBytes);
         randomBytes[6]  &= 0x0f;  /* clear version        */
@@ -100,4 +101,21 @@ public final class Guid implements Comparable<Guid> {
     public static Guid valueOf(byte[] bytes) {
         return new Guid(bytes);
     }
+    
+    public static Guid valueOf(String input) {
+        String[] components = input.split("-");
+        if (components.length != 5)
+            throw new IllegalArgumentException("Invalid Guid string format");
+        for (int i = 0; i < 5; i++)
+            components[i] = "0x"+components[i];
+        long mostSigBits = Long.decode(components[0]);
+        mostSigBits <<= 16;
+        mostSigBits |= Long.decode(components[1]);
+        mostSigBits <<= 16;
+        mostSigBits |= Long.decode(components[2]);
+        long leastSigBits = Long.decode(components[3]);
+        leastSigBits <<= 48;
+        leastSigBits |= Long.decode(components[4]);
+        return new Guid(mostSigBits, leastSigBits);
+    }        
 }
